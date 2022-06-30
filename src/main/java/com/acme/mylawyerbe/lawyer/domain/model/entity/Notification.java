@@ -1,0 +1,48 @@
+package com.acme.mylawyerbe.lawyer.domain.model.entity;
+
+import com.acme.mylawyerbe.shared.domain.model.AuditModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
+
+@Getter
+@Setter
+@With
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "notifications")
+public class Notification {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Date date; //tiene alguna validación??
+
+    @NotNull
+    @NotBlank
+    @Size(max = 240)
+    private String message;
+
+    //falta las relaciones
+    //la clase donde se coloca la relación ya no extiende de Audit Model
+    // 1 cliente tiene muchas notificaciones
+    //clientId
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    @JsonIgnore
+    private Client client;
+
+    //lawyerId
+    //con el atributo "createdAt" es suficiente?
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "lawyer_id", nullable = false)
+    @JsonIgnore
+    private Lawyer lawyer;
+}

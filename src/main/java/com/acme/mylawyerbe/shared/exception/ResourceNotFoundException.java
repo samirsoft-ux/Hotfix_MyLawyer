@@ -1,0 +1,28 @@
+package com.acme.mylawyerbe.shared.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException{
+
+    public ResourceNotFoundException(){
+        super();
+    }
+
+    public ResourceNotFoundException(String message){
+        super(message);
+    }
+
+    public ResourceNotFoundException(String message, Throwable cause){
+        super(message, cause);
+    }
+
+    public ResourceNotFoundException(String resourceName, Long resourceId){
+        super(String.format("%s with id %d not found.", resourceName, resourceId));
+    }
+
+    public ResourceNotFoundException(String resourceName1, String resourceName2, Long resourceId1, Long resourceId2){
+        super(String.format("%s and %s with id %d and %d not found.", resourceName1, resourceName2, resourceId1, resourceId2));
+    }
+}
