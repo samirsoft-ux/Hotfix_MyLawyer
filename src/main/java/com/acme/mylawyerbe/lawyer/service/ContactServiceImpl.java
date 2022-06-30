@@ -99,7 +99,7 @@ public class ContactServiceImpl implements ContactService {
 
         return contactRepository.findById(contactId).map(existingContact ->
                 contactRepository.save(existingContact.withDate(request.getDate())))
-                .orElseThrow(() -> new ResourceNotFoundException("Lawyer", "Client", lawyerId, clientId));
+                .orElseThrow();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ContactServiceImpl implements ContactService {
         return contactRepository.findByIdAndClientIdAndLawyerId(contactId, clientId, lawyerId).map(contact -> {
             contactRepository.delete(contact);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, contactId));
+        }).orElseThrow();
     }
 
 }

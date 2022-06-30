@@ -11,10 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@SecurityRequirement(name = "acme")
 @RestController
 @RequestMapping("/api/v1/clients/{clientId}/appointments")
 @Tag(name = "Appointments", description = "Create, read, update and delete clients")
@@ -29,7 +27,6 @@ public class ClientAppointmentsController {
         this.mapper = mapper;
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('INSTRUCTOR') or hasRole('ADMIN')")
     @GetMapping
     @Operation(summary = "Get all appointments by client ID")
     public Page<AppointmentResource> getAllAppointmentByClientId(@PathVariable Long clientId, Pageable pageable){

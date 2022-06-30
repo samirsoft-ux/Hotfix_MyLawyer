@@ -1,6 +1,5 @@
 package com.acme.mylawyerbe.lawyer.domain.model.entity;
 
-import com.acme.mylawyerbe.shared.domain.model.AuditModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

@@ -99,7 +99,7 @@ public class FavoriteLawyerServiceImpl implements FavoriteLawyerService {
 
         return favoriteLawyerRepository.findById(favoriteLawyerId).map(existingFavoriteLawyer ->
                 favoriteLawyerRepository.save(existingFavoriteLawyer.withDate(request.getDate())))
-                .orElseThrow(() -> new ResourceNotFoundException("Lawyer", "Client", lawyerId, clientId));
+                .orElseThrow();
     }
 
     @Override
@@ -107,6 +107,6 @@ public class FavoriteLawyerServiceImpl implements FavoriteLawyerService {
         return favoriteLawyerRepository.findByIdAndClientIdAndLawyerId(favoriteLawyerId, clientId, lawyerId).map(favoriteLawyer -> {
             favoriteLawyerRepository.delete(favoriteLawyer);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, favoriteLawyerId));
+        }).orElseThrow();
     }
 }

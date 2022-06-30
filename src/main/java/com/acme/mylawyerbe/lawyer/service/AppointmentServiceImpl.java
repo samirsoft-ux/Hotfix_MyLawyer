@@ -5,8 +5,6 @@ import com.acme.mylawyerbe.lawyer.domain.persistence.AppointmentRepository;
 import com.acme.mylawyerbe.lawyer.domain.persistence.ClientRepository;
 import com.acme.mylawyerbe.lawyer.domain.persistence.LawyerRepository;
 import com.acme.mylawyerbe.lawyer.domain.service.AppointmentService;
-import com.acme.mylawyerbe.shared.exception.ResourceNotFoundException;
-import com.acme.mylawyerbe.shared.exception.ResourceValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +66,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Appointment create(Long lawyerId, Long clientId, Appointment appointment) {
         Set<ConstraintViolation<Appointment>> violations = validator.validate(appointment);
 
-        if (!violations.isEmpty())
-            throw new ResourceValidationException(ENTITY, violations);
 
         //TODO: como retorno las 2 relaciones?
         return lawyerRepository.findById(lawyerId).map(lawyer -> {
@@ -77,8 +73,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             return clientRepository.findById(clientId).map(client -> {
                 appointment.setClient(client);
                 return appointmentRepository.save(appointment);
-            }).orElseThrow(() -> new ResourceNotFoundException("Client", clientId));
-        }).orElseThrow(() -> new ResourceNotFoundException("Lawyer", lawyerId));
+            }).orElseThrow();
+        }).orElseThrow();
 
         /*return clientRepository.findById(clientId).map(client -> {
             appointment.setClient(client);
@@ -91,18 +87,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Appointment update(Long lawyerId, Long clientId, Long appointmentId, Appointment request) {
         Set<ConstraintViolation<Appointment>> violations = validator.validate(request);
 
-        if (!violations.isEmpty())
-            throw new ResourceValidationException(ENTITY, violations);
-
-        if (!lawyerRepository.existsById(lawyerId))
-            throw new ResourceNotFoundException("Lawyer", lawyerId);
-
-        if (!clientRepository.existsById(clientId))
-            throw new ResourceNotFoundException("Client", clientId);
-
         return appointmentRepository.findById(appointmentId).map(existingAppointment ->
                 appointmentRepository.save(existingAppointment.withDate(request.getDate())))
-                .orElseThrow(() -> new ResourceNotFoundException("Lawyer", "Client", lawyerId, clientId));
+                .orElseThrow();
     }
 
     @Override
@@ -110,6 +97,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findByIdAndClientIdAndLawyerId(appointmentId, clientId, lawyerId).map(appointment -> {
             appointmentRepository.delete(appointment);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, appointmentId));
+        }).orElseThrow();
     }
 }

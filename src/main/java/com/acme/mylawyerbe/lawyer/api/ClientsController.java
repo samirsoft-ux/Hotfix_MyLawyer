@@ -16,10 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@SecurityRequirement(name = "acme")
 @RestController
 @RequestMapping(value = "/api/v1/clients", produces = "application/json")
 @Tag(name = "Clients", description = "Create, read, update and delete clients")
@@ -36,20 +34,17 @@ public class ClientsController {
 
     @GetMapping
     @Operation(summary = "Get all clients")
-    @PreAuthorize("hasRole('USER') or hasRole('INSTRUCTOR') or hasRole('ADMIN')")
     public Page<ClientResource> getAllClients(@ParameterObject Pageable pageable){
         return mapper.modelListPage(clientService.getAll(), pageable);
     }
 
     @GetMapping("{clientId}")
-    @PreAuthorize("hasRole('USER') or hasRole('INSTRUCTOR') or hasRole('ADMIN')")
     @Operation(summary = "Get a client by id")
     public ClientResource getClientById(@PathVariable Long clientId){
         return mapper.toResource(clientService.getById(clientId));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create Client", responses = {
             @ApiResponse(description = "Client successfully created", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientResource.class)))
     })
@@ -58,14 +53,12 @@ public class ClientsController {
     }
 
     @PutMapping("{clientId}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update Client")
     public ClientResource updateClient(@PathVariable Long clientId, @RequestBody UpdateClientResource resource){
         return mapper.toResource(clientService.update(clientId, mapper.toModel(resource)));
     }
 
     @DeleteMapping("{clientId}")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete Client")
     public ResponseEntity<?> deleteClient(@PathVariable Long clientId){
         return clientService.delete(clientId);

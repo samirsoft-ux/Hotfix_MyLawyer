@@ -1,6 +1,5 @@
 package com.acme.mylawyerbe.lawyer.domain.model.entity;
 
-import com.acme.mylawyerbe.shared.domain.model.AuditModel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Table(name = "clients")
-public class Client extends AuditModel {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

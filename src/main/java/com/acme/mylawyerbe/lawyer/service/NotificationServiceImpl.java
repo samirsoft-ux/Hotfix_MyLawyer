@@ -100,7 +100,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         return notificationRepository.findById(notificationId).map(existingNotification ->
                 notificationRepository.save(existingNotification.withDate(request.getDate())))
-                .orElseThrow(() -> new ResourceNotFoundException("Lawyer", "Client", lawyerId, clientId));
+                .orElseThrow();
     }
 
     @Override
@@ -108,6 +108,6 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.findByIdAndClientIdAndLawyerId(notificationId, clientId, lawyerId).map(notification -> {
             notificationRepository.delete(notification);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, notificationId));
+        }).orElseThrow();
     }
 }
